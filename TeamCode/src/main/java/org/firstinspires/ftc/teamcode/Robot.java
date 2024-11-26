@@ -18,6 +18,7 @@ public class Robot {
 
     public final DriveSubsystem driveSubsystem;
     public final IntakeSubsystem intakeSubsystem;
+    public final ElbowSubsystem elbowSubsystem;
 
     public Robot(OpMode opMode) {
         this.opMode = opMode;
@@ -27,6 +28,7 @@ public class Robot {
 
         driveSubsystem = new DriveSubsystem(opMode.hardwareMap);
         intakeSubsystem = new IntakeSubsystem(opMode.hardwareMap);
+        elbowSubsystem = new ElbowSubsystem(opMode.hardwareMap);
 
     }
 
@@ -48,7 +50,19 @@ public class Robot {
 
         driveSubsystem.setDefaultCommand(defaultDriveCommand);
 
+        Trigger runElbowMotor = new Trigger(() -> operatorGamepad.getButton(GamepadKeys.Button.DPAD_UP));
+        runElbowMotor.whileActiveContinuous(() -> elbowSubsystem.runElbowMotor(1.0));
+        runElbowMotor.whenInactive(() -> elbowSubsystem.runElbowMotor(0.0));
 
+        Trigger reverseElbowMotor = new Trigger(() -> operatorGamepad.getButton(GamepadKeys.Button.DPAD_DOWN));
+        reverseElbowMotor.whileActiveContinuous(() -> elbowSubsystem.runElbowMotor(-1.0));
+        reverseElbowMotor.whenInactive(() -> elbowSubsystem.runElbowMotor(0.0));
+
+        Trigger servoUp = new Trigger(() -> operatorGamepad.getButton(GamepadKeys.Button.B));
+        servoUp.whenActive(() -> intakeSubsystem.servoUpPosition());
+
+        Trigger servoDown = new Trigger(() -> operatorGamepad.getButton(GamepadKeys.Button.X));
+        servoDown.whenActive(() -> intakeSubsystem.servoDownPosition());
     }
 
     public void configureAutoModeBindings() {
@@ -68,12 +82,7 @@ public class Robot {
             intakeSubsystem.activeIntakeServo(0);
         }
 
-
-        if (isPressed(operatorGamepad.getRightX())) {
-            intakeSubsystem.servoUpPosition(operatorGamepad.getRightX());
-        } else if (isPressed(operatorGamepad.getRightX())) {
-            intakeSubsystem.servoDownPosition(operatorGamepad.getRightX());
-        }
+        opMode.telemetry.addData("wristServoPosition",intakeSubsystem.returnCurrentWristServoPosition());
         opMode.telemetry.update();
     }
 

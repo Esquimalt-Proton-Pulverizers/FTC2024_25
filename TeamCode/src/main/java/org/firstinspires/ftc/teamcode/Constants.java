@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode; 
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -32,4 +34,12 @@ public abstract class Constants {
         public static final double DEADZONE = 0.1;
     }
 
+    public static abstract class ElbowConstants{
+        public static final DcMotorSimple.Direction INTAKE_ARM_MOTOR_DIRECTION = DcMotorSimple.Direction.REVERSE;
+    }
+
+    public static abstract class IntakeConstants{
+        public static double SERVO_UP_POSITION = 180;
+        public static double SERVO_DOWN_POSITION = 0;
+    }
 }

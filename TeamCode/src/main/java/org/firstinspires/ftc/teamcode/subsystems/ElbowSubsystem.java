@@ -15,9 +15,9 @@ public class ElbowSubsystem extends SubsystemBase {
         this.hardwareMap = hardwareMap;
 
         intakeArmAngleMotor = hardwareMap.get(DcMotorEx.class, Constants.DriveConstants.INTAKE_ARM_ANGLE_MOTOR);
-
         intakeArmAngleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        intakeArmAngleMotor.setDirection(Constants.ElbowConstants.INTAKE_ARM_MOTOR_DIRECTION);
         resetEncoders();
     }
 
