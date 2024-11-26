@@ -1,20 +1,21 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
 @Autonomous(name="Autonomous parking", group = "Real")
 public class ParkingOpMode extends LinearOpMode {
 
-    Robot robot = new Robot(this);
+    private Robot robot;
+
     @Override
     public void runOpMode() throws InterruptedException {
 
-
+        Robot robot = new Robot(this);
         robot.configureAutoModeBindings();
 
         waitForStart();
@@ -25,7 +26,7 @@ public class ParkingOpMode extends LinearOpMode {
         robot.driveSubsystem.drive(0, 0);
 
         while (opModeIsActive() && !isStopRequested()) {
-            robot.run();
+            robot.autoRun();
         }
     }
     public void driveAndSleep(double forward, double rotate, int sleepTimeMilli)

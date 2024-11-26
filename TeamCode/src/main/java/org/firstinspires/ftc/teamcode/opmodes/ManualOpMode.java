@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Robot;
 
 @TeleOp(name="TeleOp", group = "Real")
 public class ManualOpMode extends LinearOpMode {
-
+// i like men
     @Override
     public void runOpMode() throws InterruptedException {
 
