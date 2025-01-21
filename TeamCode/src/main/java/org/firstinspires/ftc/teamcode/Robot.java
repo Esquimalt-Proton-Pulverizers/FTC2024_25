@@ -14,21 +14,15 @@ public class Robot {
     private final OpMode opMode;
 
     private final GamepadEx driverGamepad;
-    private final GamepadEx operatorGamepad;
 
     public final DriveSubsystem driveSubsystem;
-    public final IntakeSubsystem intakeSubsystem;
-    public final ElbowSubsystem elbowSubsystem;
 
     public Robot(OpMode opMode) {
         this.opMode = opMode;
 
         driverGamepad = new GamepadEx(opMode.gamepad1);
-        operatorGamepad = new GamepadEx(opMode.gamepad2);
 
         driveSubsystem = new DriveSubsystem(opMode.hardwareMap);
-        intakeSubsystem = new IntakeSubsystem(opMode.hardwareMap);
-        elbowSubsystem = new ElbowSubsystem(opMode.hardwareMap);
 
     }
 
@@ -49,20 +43,6 @@ public class Robot {
         defaultDriveCommand.addRequirements(driveSubsystem);
 
         driveSubsystem.setDefaultCommand(defaultDriveCommand);
-
-        Trigger runElbowMotor = new Trigger(() -> operatorGamepad.getButton(GamepadKeys.Button.DPAD_UP));
-        runElbowMotor.whileActiveContinuous(() -> elbowSubsystem.runElbowMotor(1.0));
-        runElbowMotor.whenInactive(() -> elbowSubsystem.runElbowMotor(0.0));
-
-        Trigger reverseElbowMotor = new Trigger(() -> operatorGamepad.getButton(GamepadKeys.Button.DPAD_DOWN));
-        reverseElbowMotor.whileActiveContinuous(() -> elbowSubsystem.runElbowMotor(-1.0));
-        reverseElbowMotor.whenInactive(() -> elbowSubsystem.runElbowMotor(0.0));
-
-        Trigger servoUp = new Trigger(() -> operatorGamepad.getButton(GamepadKeys.Button.B));
-        servoUp.whenActive(() -> intakeSubsystem.servoUpPosition());
-
-        Trigger servoDown = new Trigger(() -> operatorGamepad.getButton(GamepadKeys.Button.X));
-        servoDown.whenActive(() -> intakeSubsystem.servoDownPosition());
     }
 
     public void configureAutoModeBindings() {
@@ -74,15 +54,7 @@ public class Robot {
 
     public void run() {
         CommandScheduler.getInstance().run();
-        if (operatorGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5) {//if left trigger intake
-            intakeSubsystem.activeIntakeServo(1);
-        } else if(operatorGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5){//if right trigger outtake
-            intakeSubsystem.activeIntakeServo(-1);
-        } else {// if not triggers stop intake servo
-            intakeSubsystem.activeIntakeServo(0);
-        }
 
-        opMode.telemetry.addData("wristServoPosition",intakeSubsystem.returnCurrentWristServoPosition());
         opMode.telemetry.update();
     }
 

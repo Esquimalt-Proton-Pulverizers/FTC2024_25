@@ -13,10 +13,11 @@ public class DriveSubsystem extends SubsystemBase {
 
     private HardwareMap hardwareMap;
 
-    private final DcMotorEx frontLeftMotor;
-    private final DcMotorEx frontRightMotor;
+    public final DcMotorEx frontLeftMotor;
+    public final DcMotorEx frontRightMotor;
 
-    private double speedMultiplier = 1.0;
+    private double speedLeftMotorMultiplier = 1.0;
+    private double speedRightMotorMultiplier = 1.0;
 
     public DriveSubsystem(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
@@ -37,12 +38,32 @@ public class DriveSubsystem extends SubsystemBase {
         forward = Math.abs(forward) >= Constants.DriveConstants.DEADZONE ? forward : 0;
         rotate = Math.abs(rotate) >= Constants.DriveConstants.DEADZONE ? rotate : 0;
 
-        frontLeftMotor.setPower(Range.clip((forward - rotate), -1, 1) * speedMultiplier);
-        frontRightMotor.setPower(Range.clip((forward + rotate), -1, 1) * speedMultiplier);
+        frontLeftMotor.setPower(Range.clip((forward - rotate), -1, 1) * speedLeftMotorMultiplier);
+        frontRightMotor.setPower(Range.clip((forward + rotate), -1, 1) * speedRightMotorMultiplier);
     }
 
+    public void drive(double forward, double rotate, String direction) {
+        forward = Math.abs(forward) >= Constants.DriveConstants.DEADZONE ? forward : 0;
+        rotate = Math.abs(rotate) >= Constants.DriveConstants.DEADZONE ? rotate : 0;
+
+        // If the direction is "right", invert the rotate value to turn right
+        if ("right".equalsIgnoreCase(direction)) {
+            rotate = Math.abs(rotate);  // Ensure positive rotation for right turn
+        }
+        // If the direction is "left", invert the rotate value to turn left
+        else if ("left".equalsIgnoreCase(direction)) {
+            rotate = -Math.abs(rotate);  // Ensure negative rotation for left turn
+        }
+
+        // Set motor powers with clipping to the range [-1, 1] and apply speedMultiplier
+        frontLeftMotor.setPower(Range.clip((forward - rotate), -1, 1) * speedLeftMotorMultiplier);
+        frontRightMotor.setPower(Range.clip((forward + rotate), -1, 1) * speedRightMotorMultiplier);
+    }
+
+
     public void setSpeedMultiplier(double multiplier) {
-        speedMultiplier = Range.clip(multiplier, 0, 1);
+        speedLeftMotorMultiplier = Range.clip(multiplier, 0, 1);
+        speedRightMotorMultiplier = Range.clip(multiplier, 0, 1);
     }
 
     public void resetEncoders() {
