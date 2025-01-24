@@ -37,7 +37,7 @@ public class ParkingOpMode extends LinearOpMode {
         */
 
         driveSubsystem.drive(1, 0);
-        sleep(1500);
+        sleep(2000);
         driveSubsystem.drive(0, 0);
 
         while (opModeIsActive() && !isStopRequested()) {
